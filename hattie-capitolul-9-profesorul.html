@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hattie – Capitolul 9 – Profesorul</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--accent:#2949a6;--ok:#137333;--bad:#b42318;--border:#d9dfeb}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+.wrap{max-width:980px;margin:0 auto;padding:22px}.hero,.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px}.hero{margin-bottom:18px}
+.kicker{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}h1{font-size:30px;margin:8px 0}.meta{color:var(--muted);line-height:1.6}
+.audio{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.btn{border:0;border-radius:11px;padding:11px 16px;font-size:15px;font-weight:700;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#eef1f6;color:#26324d}
+.progress{height:10px;background:#e9edf4;border-radius:999px;overflow:hidden;margin:12px 0 18px}.progress>div{height:100%;background:var(--accent);width:0}
+.qnum{color:var(--muted);font-size:14px}.section{font-size:14px;color:var(--accent);font-weight:700;margin-bottom:8px}.question{font-size:21px;line-height:1.5;margin:8px 0 18px;font-weight:700}
+.options{display:grid;gap:10px}.option{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border);border-radius:12px;padding:13px;cursor:pointer;background:#fff}.option.correct{border-color:#70b77e;background:#edf8ef}.option.wrong{border-color:#e29a94;background:#fff1f0}
+.feedback{margin-top:16px;padding:13px 15px;border-radius:12px;font-weight:700;display:none}.feedback.ok{display:block;background:#edf8ef;color:var(--ok)}.feedback.bad{display:block;background:#fff1f0;color:var(--bad)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.hidden{display:none}.score{font-size:34px;font-weight:800;color:var(--accent)}
+@media(max-width:600px){.wrap{padding:12px}.hero,.card{padding:16px}.question{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<div class="kicker">John Hattie · Învățarea vizibilă · Capitolul 9</div>
+<h1>Profesorul</h1>
+<div class="meta">Set de lucru: 10 tendințe privind profesia didactică + 3 itemi teoretici + 3 itemi despre efectele profesorului. Formulare amplă, apropiată de stilul de concurs.</div>
+<div class="audio">
+<button class="btn primary" id="listen">🔊 Ascultă itemul</button>
+<button class="btn secondary" id="pause">⏸ Pauză</button>
+<button class="btn secondary" id="resume">▶ Continuă</button>
+<button class="btn secondary" id="stop">■ Oprește</button>
+</div>
+</section>
+
+<section class="card" id="quizCard">
+<div class="qnum" id="qnum"></div><div class="section" id="section"></div>
+<div class="progress"><div id="bar"></div></div>
+<div class="question" id="question"></div><div class="options" id="options"></div>
+<div class="feedback" id="feedback"></div>
+<div class="actions"><button class="btn primary" id="check">Verifică răspunsul</button><button class="btn secondary" id="next" disabled>Următorul</button><button class="btn secondary" id="restart">Reîncepe</button></div>
+</section>
+<section class="card hidden" id="resultCard"><div class="kicker">Rezultat</div><h2>Ai terminat setul.</h2><div class="score" id="score"></div><div class="meta" id="scoreText"></div><div class="actions"><button class="btn primary" id="restart2">Reia testul</button></div></section>
+</div>
+
+<script>
+const questions=[
+{sec:'Cele 10 tendințe',q:'În analiza tendințelor care caracterizează profesia didactică, autorul arată că evoluția sistemelor de educație determină o creștere a necesarului de cadre didactice, fenomen asociat și cu extinderea populației școlare și a serviciilor educaționale. Care dintre următoarele formulări este utilizată în text pentru a desemna această tendință?',o:['Mai cărunt','Mai mare','Mai tânăr','Divers'],a:1},
+{sec:'Cele 10 tendințe',q:'Analizând structura de vârstă a corpului profesoral, textul evidențiază creșterea ponderii profesorilor aflați în grupele de vârstă mai înaintată. Care este formularea prin care această tendință este denumită în text?',o:['Dornici și nerăbdători','Mai cărunt','Mai mare','Mai tânăr'],a:1},
+{sec:'Cele 10 tendințe',q:'În paralel cu îmbătrânirea unei părți a corpului profesoral, textul identifică și o tendință determinată de intrarea în profesie a unor persoane aflate la începutul parcursului profesional. Care formulare corespunde acestei tendințe?',o:['Divers','Feminin','Mai tânăr','Pregătiți online'],a:2},
+{sec:'Cele 10 tendințe',q:'Datele analizate în text indică faptul că, în numeroase sisteme de educație, ponderea femeilor în profesia didactică este mai mare decât cea a bărbaților. Ce tendință este descrisă?',o:['Divers','Feminin','Mai mare','Pregătiți online'],a:1},
+{sec:'Cele 10 tendințe',q:'În prezentarea corpului profesoral, autorul analizează și caracteristicile acestuia din perspectiva componenței și a apartenenței la diferite grupuri, observând totodată că etnia majoritară continuă să fie dominantă în anumite sisteme de educație. Care formulare desemnează tendința avută în vedere?',o:['Divers','Feminin','Mai cărunt','Prost plătiți'],a:0},
+{sec:'Cele 10 tendințe',q:'Referindu-se la profilul academic al celor care aleg cariera didactică, textul arată că, în unele state, cei mai buni absolvenți nu se îndreaptă în mod necesar către profesia de profesor. Care este formularea utilizată în text pentru această caracteristică?',o:['Dornici și nerăbdători','OK din punct de vedere academic','Pregătiți online','Probabilitate mai mică de a rămâne profesor'],a:1},
+{sec:'Cele 10 tendințe',q:'Textul arată că alegerea profesiei didactice nu presupune automat și menținerea acesteia pe întreaga durată a vieții profesionale. Fenomenul este mai evident în anumite contexte, inclusiv în mediul rural sau în zonele sărace. Care formulare exprimă această tendință?',o:['Dornici și nerăbdători','Mai tânăr','Probabilitate mai mică de a rămâne profesor','Prost plătiți'],a:2},
+{sec:'Cele 10 tendințe',q:'În analiza modalităților contemporane de formare pentru profesia didactică, textul prezintă situația în care o parte dintre viitorii profesori parcurg programe de pregătire la distanță, fiind semnalată inclusiv problema monitorizării activităților pedagogice. Care tendință este descrisă?',o:['Divers','Pregătiți online','Probabilitate mai mică de a rămâne profesor','Mai mare'],a:1},
+{sec:'Cele 10 tendințe',q:'În primii ani de exercitare a profesiei, cadrele didactice sunt prezentate ca fiind mai receptive la dezvoltare profesională și mai dispuse să învețe și să se perfecționeze. Care expresie este utilizată pentru această tendință?',o:['Dornici și nerăbdători','Mai cărunt','OK din punct de vedere academic','Pregătiți online'],a:0},
+{sec:'Cele 10 tendințe',q:'Referitor la evoluția veniturilor în profesia didactică, textul evidențiază faptul că salariile pot crește în primii ani de carieră, după care creșterile devin mai puțin semnificative. Care tendință corespunde acestei prezentări?',o:['Feminin','Mai mare','Prost plătiți','Probabilitate mai mică de a rămâne profesor'],a:2},
+{sec:'Relația profesor–elev',q:'Profesorii lucrează cu elevi care, în esență, sunt obligați de lege să participe la educație. În aceste condiții, profesorul trebuie să construiască relații pozitive cu elevii, fără a pierde rolul specific pe care îl are în clasă. Conform textului, profesorul trebuie:',o:['să dezvolte niveluri ridicate de relații pozitive profesor–elev, fiind totodată într-o poziție de autoritate','să renunțe la poziția de autoritate pentru a construi relații apropiate cu elevii','să mențină distanța emoțională pentru a evita influențarea elevilor','să lase exclusiv elevilor responsabilitatea gestionării relațiilor din clasă'],a:0},
+{sec:'Relația profesor–elev',q:'Pentru ca relația profesor–elev să contribuie pozitiv la învățare, profesorul trebuie să construiască încredere și, în același timp, să mențină cadrul necesar funcționării clasei. Care variantă corespunde textului?',o:['Profesorul trebuie să gestioneze activ o conexiune emoțională cu elevii și să aibă limite clare.','Profesorul trebuie să evite conexiunile emoționale și să mențină exclusiv limite formale.','Profesorul trebuie să stabilească limite clare numai în situațiile de evaluare.','Profesorul trebuie să transfere elevilor responsabilitatea stabilirii limitelor.'],a:0},
+{sec:'Impactul profesorului',q:'Analizând impactul cadrelor didactice asupra rezultatelor elevilor, textul atrage atenția asupra faptului că profesorii nu produc în mod automat aceleași efecte asupra învățării. Care afirmație reproduce ideea centrală prezentată?',o:['Diferențele dintre profesori sunt o sursă principală de varianță a impactului pe care profesorii îl au asupra elevilor.','Diferențele dintre profesori au o influență redusă în comparație cu ceilalți factori școlari.','Impactul profesorilor asupra elevilor este relativ constant, indiferent de caracteristicile profesorului.','Diferențele dintre profesori sunt importante numai în cazul elevilor cu rezultate slabe.'],a:0},
+{sec:'Efectele profesorului',q:'În analiza efectelor profesorului asupra literației și aritmeticii, cercetătorii au comparat asemănările dintre gemeni care au fost sau nu în aceeași clasă. Concluzia studiului a arătat că procentul varianței explicate de profesori/clasă a fost redus. Cum au interpretat cercetătorii această constatare?',o:['Prin faptul că diferențele dintre elevi sunt determinate exclusiv de profesor.','Prin influența factorilor genetici, a mediului familial și a așteptărilor, precum și prin similitudinea a ceea ce se predă la ore în condițiile unei programe naționale axate pe obiective anuale.','Prin lipsa oricărei influențe a mediului familial asupra performanței elevilor.','Prin faptul că programa națională produce diferențe foarte mari între ceea ce se predă în clase.'],a:1},
+{sec:'Efectele profesorului',q:'După analiza efectelor clasei și ale profesorului, Hattie precizează că acest capitol este structurat în două mari părți. Care variantă reproduce corect această structură?',o:['Atributele profesorului și formarea profesională a profesorului.','Evaluarea elevilor și organizarea școlii.','Personalitatea elevului și mediul familial.','Predarea disciplinelor și managementul instituțional.'],a:0},
+{sec:'Efectele profesorului',q:'În prezentarea noțiunilor-cheie ale capitolului, Hattie evidențiază o serie de caracteristici și practici asociate profesorilor cu impact. Care variantă este în concordanță cu textul?',o:['Profesorii colaborează pentru a-și analiza critic impactul, urmăresc credibilitatea în ochii elevilor, claritatea a ceea ce se așteaptă de la elevi și evită etichetarea acestora.','Profesorii trebuie să urmărească exclusiv cunoașterea materiei, fără a lua în considerare credibilitatea sau așteptările elevilor.','Profesorii cu impact evită colaborarea și se bazează în principal pe experiența individuală.','Profesorii trebuie să stabilească așteptările numai în funcție de nivelul inițial al elevilor.'],a:0}
+];
+
+let i=0,score=0,checked=false,answers=Array(questions.length).fill(null);
+const qnum=document.getElementById('qnum'),section=document.getElementById('section'),bar=document.getElementById('bar'),question=document.getElementById('question'),options=document.getElementById('options'),feedback=document.getElementById('feedback'),check=document.getElementById('check'),next=document.getElementById('next'),quizCard=document.getElementById('quizCard'),resultCard=document.getElementById('resultCard'),scoreEl=document.getElementById('score'),scoreText=document.getElementById('scoreText');
+function render(){checked=false;check.disabled=false;next.disabled=true;feedback.className='feedback';feedback.textContent='';const x=questions[i];qnum.textContent='Întrebarea '+(i+1)+' din '+questions.length;section.textContent=x.sec;bar.style.width=((i/questions.length)*100)+'%';question.textContent=x.q;options.innerHTML='';x.o.forEach((t,n)=>{const lab=document.createElement('label');lab.className='option';lab.innerHTML='<input type="radio" name="opt" value="'+n+'"><span><strong>'+String.fromCharCode(65+n)+'.</strong> '+t+'</span>';options.appendChild(lab)})}
+check.onclick=()=>{if(checked)return;const sel=document.querySelector('input[name="opt"]:checked');if(!sel){feedback.className='feedback bad';feedback.textContent='Selectează mai întâi o variantă.';return}const v=Number(sel.value),x=questions[i];answers[i]=v;checked=true;document.querySelectorAll('.option').forEach((el,n)=>{el.querySelector('input').disabled=true;if(n===x.a)el.classList.add('correct');if(n===v&&v!==x.a)el.classList.add('wrong')});if(v===x.a){score++;feedback.className='feedback ok';feedback.innerHTML='<b>Corect.</b>'}else{feedback.className='feedback bad';feedback.innerHTML='<b>Greșit. Răspunsul corect este '+String.fromCharCode(65+x.a)+'.</b>'}check.disabled=true;next.disabled=false};
+next.onclick=()=>{if(i<questions.length-1){i++;render()}else finish()};
+function finish(){bar.style.width='100%';quizCard.classList.add('hidden');resultCard.classList.remove('hidden');scoreEl.textContent=score+' / '+questions.length;scoreText.textContent='Ai răspuns corect la '+Math.round(score/questions.length*100)+'% dintre itemi.'}
+function restart(){i=0;score=0;checked=false;answers=Array(questions.length).fill(null);resultCard.classList.add('hidden');quizCard.classList.remove('hidden');render()}
+document.getElementById('restart').onclick=restart;document.getElementById('restart2').onclick=restart;
+
+let utter=null;
+document.getElementById('listen').onclick=()=>{speechSynthesis.cancel();const x=questions[i];utter=new SpeechSynthesisUtterance(x.q+'. '+x.o.map((v,n)=>String.fromCharCode(65+n)+'. '+v).join('. '));utter.lang='ro-RO';utter.rate=0.92;speechSynthesis.speak(utter)};
+document.getElementById('pause').onclick=()=>speechSynthesis.pause();
+document.getElementById('resume').onclick=()=>speechSynthesis.resume();
+document.getElementById('stop').onclick=()=>speechSynthesis.cancel();
+render();
+</script>
+</body>
+</html>
